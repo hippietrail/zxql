@@ -7,6 +7,36 @@
 
 import Cocoa
 import Quartz
+import UniformTypeIdentifiers
+
+extension RandomAccessCollection {
+    /// Retrieve a single element from a collection by offset (like Rust, Go, etc.)
+    /// - Parameter offset: Offset from start of collection
+    /// - Returns: Element at that offset
+    subscript(o offset: Int) -> Element {
+        return self[index(startIndex, offsetBy: offset)]
+    }
+
+    /// Retrieve a sub-collection by offset and length (like Rust, Go, etc.)
+    /// - Parameter offset: Offset from start of collection
+    /// - Parameter length: Number of elements to retrieve
+    /// - Returns: Sub-collection (slice) of specified length
+    subscript(o offset: Int, l length: Int) -> SubSequence {
+        let startIndex = self.index(self.startIndex, offsetBy: offset)
+        let endIndex = self.index(startIndex, offsetBy: length)
+        return self[startIndex..<endIndex]
+    }
+
+    /// Retrieve a sub-collection by start and end offset (like Rust, Go, etc.)
+    /// - Parameter offset: Offset from start of collection
+    /// - Parameter endOffset: End offset from start of collection
+    /// - Returns: Sub-collection (slice) from offset to endOffset
+    subscript(o offset: Int, e endOffset: Int) -> SubSequence {
+        let startIndex = self.index(self.startIndex, offsetBy: offset)
+        let endIndex = self.index(self.startIndex, offsetBy: endOffset)
+        return self[startIndex..<endIndex]
+    }
+}
 
 class PreviewViewController: NSViewController, QLPreviewingController {
     @IBOutlet weak var imageView: NSImageView?
@@ -48,13 +78,12 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         }
     }
 
-    /// Decode SNA snapshot data
-    /// Format: Read 3 bytes at a time: x, y, and RGB as 3:3:2 (RRRGGGBB)
-    private func decodeSnapshotData(_ data: Data) -> NSImage {
+        private func decodeSnapshotData(_ data: Data) -> NSImage {
         let width = 256
         let height = 192
-        
-        // Create bitmap image representation
+
+        // TODO is there a more minimal way that will be
+        // TODO suitable for the Speccy screen's resolutions and colour needs?
         let bitmap = NSBitmapImageRep(
             bitmapDataPlanes: nil,
             pixelsWide: width,
@@ -68,36 +97,57 @@ class PreviewViewController: NSViewController, QLPreviewingController {
             bytesPerRow: width * 3,
             bitsPerPixel: 24
         )!
+
+        let displayStart = 27
+        let displayLength = 32 * 192
+        let attributeStart = displayStart + displayLength
+        let attributeLength = 32 * 24
         
-        // Initialize with black
-        bitmap.bitmapData?.withMemoryRebound(to: UInt8.self, capacity: width * height * 3) { ptr in
-            for i in 0..<(width * height * 3) {
-                ptr[i] = 0
-            }
-        }
-        
-        // Read 3-byte chunks: x, y, rgb332
-        let numChunks = data.count / 3
-        for i in 0..<numChunks {
-            let offset = i * 3
-            let x = Int(data[offset])
-            let y = Int(data[offset + 1])
-            let rgb332 = data[offset + 2]
-            
-            // Skip invalid coordinates
-            guard x < width && y < height else { continue }
-            
-            // Decode RGB 3:3:2 format
-            let r = UInt8((rgb332 & 0xE0) >> 0)      // Top 3 bits
-            let g = UInt8((rgb332 & 0x1C) << 3)      // Middle 3 bits
-            let b = UInt8((rgb332 & 0x03) << 6)      // Bottom 2 bits
-            
-            // Set pixel in bitmap
-            let pixelOffset = (y * width + x) * 3
-            bitmap.bitmapData?.withMemoryRebound(to: UInt8.self, capacity: width * height * 3) { ptr in
-                ptr[pixelOffset] = r
-                ptr[pixelOffset + 1] = g
-                ptr[pixelOffset + 2] = b
+        let displayData = data[o: displayStart, l: displayLength]
+        let attributeData = data[o: attributeStart, l: attributeLength]
+
+        for chy in 0..<24 {
+            for chx in 0..<32 {
+
+                let at = attributeData[o: chy * 32 + chx]
+
+                let ink = at & 0x07
+                let ib = UInt8(bitPattern: -Int8(ink & 0b001))
+                let ir = UInt8(bitPattern: -Int8(ink & 0b010)>>1)
+                let ig = UInt8(bitPattern: -Int8(ink & 0b100)>>2)
+
+                let paper = (at>>3) & 0x07
+                let pb = UInt8(bitPattern: -Int8(paper & 0b001))
+                let pr = UInt8(bitPattern: -Int8(paper & 0b010)>>1)
+                let pg = UInt8(bitPattern: -Int8(paper & 0b100)>>2)
+
+                let bright = (at & 0x40) != 0
+
+                for pixY in 0..<8 {
+                    let y = chy * 8 + pixY
+
+                    let specY = (y & 0b11000000) | ((y & 0b00000111) << 3) | ((y & 0b00111000) >> 3)
+
+                    let byte = displayData[o: specY * 32 + chx]
+                    
+                    let off = y * 256 * 3 + chx * 8 * 3;
+
+                    for bit in 0..<8 {
+                        var (r, g, b) = ((0b10000000 >> bit) & byte) != 0 ? (ir, ig, ib) : (pr, pg, pb)
+
+                        if !bright { 
+                            r = (r >> 2) + (r >> 1) + (r >> 3)
+                            g = (g >> 2) + (g >> 1) + (g >> 3)
+                            b = (b >> 2) + (b >> 1) + (b >> 3)
+                        }
+
+                        bitmap.bitmapData?.withMemoryRebound(to: UInt8.self, capacity: width * height * 3) { ptr in
+                            ptr[off + bit * 3 + 0] = r
+                            ptr[off + bit * 3 + 1] = g
+                            ptr[off + bit * 3 + 2] = b
+                        }
+                    }
+                }
             }
         }
         
@@ -105,6 +155,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         image.addRepresentation(bitmap)
         return image
     }
+
 
     /// Create a simple error image with text
     private func createErrorImage(with message: String) -> NSImage {
