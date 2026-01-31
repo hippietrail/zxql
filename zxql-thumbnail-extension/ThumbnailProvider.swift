@@ -98,13 +98,21 @@ class ThumbnailProvider: QLThumbnailProvider {
             let image = NSImage(size: bitmap.size)
             image.addRepresentation(bitmap)
             
-            // Set context size to preserve 4:3 aspect ratio (256:192)
-            // Calculate size that fits within maxSize while maintaining aspect
+            // Set context size respecting aspect ratio (256:192 = 4:3)
+            // Must be between minimumSize and maximumSize per Apple docs
+            let minSize = request.minimumSize
             let maxSize = request.maximumSize
-            let maxScale = min(maxSize.width / CGFloat(width), maxSize.height / CGFloat(height))
-            let contextWidth = CGFloat(width) * maxScale
-            let contextHeight = CGFloat(height) * maxScale
-            let contextSize = CGSize(width: contextWidth, height: contextHeight)
+            let aspectRatio = CGFloat(height) / CGFloat(width)
+            
+            // Calculate size that fits within constraints while preserving aspect
+            var contextSize = maxSize
+            let proposedHeight = aspectRatio * maxSize.width
+            if proposedHeight <= maxSize.height {
+                contextSize.height = max(proposedHeight.rounded(.down), minSize.height)
+            } else {
+                contextSize.width = maxSize.height / aspectRatio
+                contextSize.width = max(contextSize.width.rounded(.down), minSize.width)
+            }
             
             let reply = QLThumbnailReply(contextSize: contextSize, currentContextDrawing: { () -> Bool in
                 image.draw(in: NSRect(origin: .zero, size: contextSize))
