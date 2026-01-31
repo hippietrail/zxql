@@ -62,6 +62,8 @@ The decoder reconstructs the ZX Spectrum display format:
 ❌ **DRY refactoring with shared SnapshotDecoder.swift** → Module compilation errors  
 ❌ **Manual pbxproj editing** → Too fragile, UUID management errors  
 ❌ **Relied on file discovery** → Swift files need explicit Build Phase entry or Xcode won't compile  
+❌ **Used only `request.maximumSize`** → Forced thumbnails to square; Finder ignored aspect ratio  
+✅ **Constrained contextSize between `minimumSize` and `maximumSize`** → Finder respects aspect ratio (per [Apple docs](https://developer.apple.com/documentation/quicklookthumbnailing/qlfilethumbnailrequest) & [Stack Overflow](https://stackoverflow.com/questions/48451557/qlthumbnailprovider-extension-does-not-appear-to-be-called))  
 
 ## Build & Test
 
