@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		54C2F67B2F18C6AE00CEA17F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54C2F67A2F18C6AD00CEA17F /* Quartz.framework */; };
 		54C2F6872F18C6AE00CEA17F /* zxql-preview-extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 54C2F6782F18C6AD00CEA17F /* zxql-preview-extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		54D355F82F2E1D00004A9B88 /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54D355F72F2E1D00004A9B88 /* QuickLookThumbnailing.framework */; };
+		54D355F92F2E1D00004A9B88 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54C2F67A2F18C6AD00CEA17F /* Quartz.framework */; };
+		54D356002F2E1D00004A9B88 /* zxql-thumbnail-extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 54D355F62F2E1D00004A9B88 /* zxql-thumbnail-extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +36,13 @@
 			remoteGlobalIDString = 54C2F6772F18C6AD00CEA17F;
 			remoteInfo = "zxql-preview-extension";
 		};
+		54D355FE2F2E1D00004A9B88 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 54C2F63F2F18C63F00CEA17F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 54D355F52F2E1D00004A9B88;
+			remoteInfo = "zxql-thumbnail-extension";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +52,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				54D356002F2E1D00004A9B88 /* zxql-thumbnail-extension.appex in Embed Foundation Extensions */,
 				54C2F6872F18C6AE00CEA17F /* zxql-preview-extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -55,6 +66,8 @@
 		54C2F6612F18C64000CEA17F /* zxql-host-appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "zxql-host-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		54C2F6782F18C6AD00CEA17F /* zxql-preview-extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "zxql-preview-extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		54C2F67A2F18C6AD00CEA17F /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		54D355F62F2E1D00004A9B88 /* zxql-thumbnail-extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "zxql-thumbnail-extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		54D355F72F2E1D00004A9B88 /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -91,6 +104,11 @@
 			path = "zxql-preview-extension";
 			sourceTree = "<group>";
 		};
+		54D355FA2F2E1D00004A9B88 /* zxql-thumbnail-extension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "zxql-thumbnail-extension";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +141,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		54D355F32F2E1D00004A9B88 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54D355F82F2E1D00004A9B88 /* QuickLookThumbnailing.framework in Frameworks */,
+				54D355F92F2E1D00004A9B88 /* Quartz.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -133,6 +160,7 @@
 				54C2F65A2F18C64000CEA17F /* zxql-host-appTests */,
 				54C2F6642F18C64000CEA17F /* zxql-host-appUITests */,
 				54C2F67C2F18C6AE00CEA17F /* zxql-preview-extension */,
+				54D355FA2F2E1D00004A9B88 /* zxql-thumbnail-extension */,
 				54C2F6792F18C6AD00CEA17F /* Frameworks */,
 				54C2F6482F18C63F00CEA17F /* Products */,
 			);
@@ -145,6 +173,7 @@
 				54C2F6572F18C64000CEA17F /* zxql-host-appTests.xctest */,
 				54C2F6612F18C64000CEA17F /* zxql-host-appUITests.xctest */,
 				54C2F6782F18C6AD00CEA17F /* zxql-preview-extension.appex */,
+				54D355F62F2E1D00004A9B88 /* zxql-thumbnail-extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				54C2F67A2F18C6AD00CEA17F /* Quartz.framework */,
+				54D355F72F2E1D00004A9B88 /* QuickLookThumbnailing.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -173,6 +203,7 @@
 			);
 			dependencies = (
 				54C2F6862F18C6AE00CEA17F /* PBXTargetDependency */,
+				54D355FF2F2E1D00004A9B88 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				54C2F6492F18C63F00CEA17F /* zxql-host-app */,
@@ -252,6 +283,28 @@
 			productReference = 54C2F6782F18C6AD00CEA17F /* zxql-preview-extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		54D355F52F2E1D00004A9B88 /* zxql-thumbnail-extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54D356042F2E1D00004A9B88 /* Build configuration list for PBXNativeTarget "zxql-thumbnail-extension" */;
+			buildPhases = (
+				54D355F22F2E1D00004A9B88 /* Sources */,
+				54D355F32F2E1D00004A9B88 /* Frameworks */,
+				54D355F42F2E1D00004A9B88 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				54D355FA2F2E1D00004A9B88 /* zxql-thumbnail-extension */,
+			);
+			name = "zxql-thumbnail-extension";
+			packageProductDependencies = (
+			);
+			productName = "zxql-thumbnail-extension";
+			productReference = 54D355F62F2E1D00004A9B88 /* zxql-thumbnail-extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -276,6 +329,9 @@
 					54C2F6772F18C6AD00CEA17F = {
 						CreatedOnToolsVersion = 26.2;
 					};
+					54D355F52F2E1D00004A9B88 = {
+						CreatedOnToolsVersion = 26.2;
+					};
 				};
 			};
 			buildConfigurationList = 54C2F6422F18C63F00CEA17F /* Build configuration list for PBXProject "zxql-host-app" */;
@@ -296,6 +352,7 @@
 				54C2F6562F18C64000CEA17F /* zxql-host-appTests */,
 				54C2F6602F18C64000CEA17F /* zxql-host-appUITests */,
 				54C2F6772F18C6AD00CEA17F /* zxql-preview-extension */,
+				54D355F52F2E1D00004A9B88 /* zxql-thumbnail-extension */,
 			);
 		};
 /* End PBXProject section */
@@ -323,6 +380,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		54C2F6762F18C6AD00CEA17F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54D355F42F2E1D00004A9B88 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -360,6 +424,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		54D355F22F2E1D00004A9B88 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -377,6 +448,11 @@
 			isa = PBXTargetDependency;
 			target = 54C2F6772F18C6AD00CEA17F /* zxql-preview-extension */;
 			targetProxy = 54C2F6852F18C6AE00CEA17F /* PBXContainerItemProxy */;
+		};
+		54D355FF2F2E1D00004A9B88 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 54D355F52F2E1D00004A9B88 /* zxql-thumbnail-extension */;
+			targetProxy = 54D355FE2F2E1D00004A9B88 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -697,6 +773,62 @@
 			};
 			name = Release;
 		};
+		54D356012F2E1D00004A9B88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "zxql-thumbnail-extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "zxql-thumbnail-extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "hippietrail.zxql-host-app.zxql-thumbnail-extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		54D356022F2E1D00004A9B88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "zxql-thumbnail-extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "zxql-thumbnail-extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "hippietrail.zxql-host-app.zxql-thumbnail-extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -741,6 +873,15 @@
 			buildConfigurations = (
 				54C2F68A2F18C6AE00CEA17F /* Debug */,
 				54C2F68B2F18C6AE00CEA17F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		54D356042F2E1D00004A9B88 /* Build configuration list for PBXNativeTarget "zxql-thumbnail-extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				54D356012F2E1D00004A9B88 /* Debug */,
+				54D356022F2E1D00004A9B88 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
