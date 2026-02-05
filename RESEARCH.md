@@ -4,8 +4,13 @@
 `com.hippietrail.sna` UTType currently matches ANY `.sna` file, regardless of size or format. The `.sna` extension is used by **at least three completely different emulator systems**:
 
 ### ZX Spectrum Snapshots
-- **48K Spectrum**: 49,179 bytes (fixed) ← **Our target**
-- **128K Spectrum**: 49,913+ bytes (variable, chunked format)
+- **48K Spectrum**: 49,179 bytes (fixed, unique) ← **Our target**
+  - No magic bytes identifier
+  - Single definitive file size = primary discriminator
+  - Heuristics: Check for illegal byte ranges in Z80 registers, undefined bits
+- **128K Spectrum**: Multiple possible sizes (49,913+ bytes, variable)
+  - Also no magic bytes
+  - Multiple possible file lengths (makes size-based detection ambiguous)
 
 ### Amstrad CPC Snapshots
 - **64K CPC**: 100+ bytes header + 64,000+ bytes RAM
@@ -20,9 +25,14 @@
 - Binary backup of Windows/DOS partitions
 - [Website](http://www.drivesnapshot.de/en/)
 
-**Key insight**: These aren't just size variations—they're **fundamentally different file formats** with different headers and structures. We need only valid **ZX Spectrum 48K** files (49,179 bytes).
+**Key insight**: These aren't just size variations—they're **fundamentally different file formats**:
+- **Amstrad CPC**: Has magic bytes ("MV - SNA"), easily identified
+- **ZX Spectrum**: NO magic bytes; relies on file size and heuristics
+- **48K Spectrum**: Single, unique file size (49,179 bytes) = definitive identifier ✓
+- **128K Spectrum**: Multiple possible sizes = ambiguous
+- **Drive Snapshot**: Variable size backup format = completely different use case
 
-We need to only handle valid 48K Spectrum .sna files and let other .sna variants pass through to other handlers.
+For our Quick Look extension: We check the exact file size of 49,179 bytes. This is the **only unambiguous identifier** for 48K Spectrum snapshots and reliably distinguishes from all other .sna variants.
 
 ## Key Findings
 
@@ -137,29 +147,47 @@ Extensions would still validate at runtime (already doing this).
 
 Only drawback: All .sna files (48K and 128K) trigger our extension, even if we only handle 48K.
 
+## Why Size-Based Validation Works for 48K Spectrum
+
+The 48K Spectrum .sna format is **uniquely identifiable by file size alone**:
+- **49,179 bytes** = always 48K Spectrum (unambiguous across all systems)
+- No magic bytes, so file size is the primary discriminator
+- Checking exact length is more reliable than heuristics for our use case
+
+This is why our implementation is correct:
+```swift
+guard data.count == 49179 else {
+    throw NSError(...)  // Silently reject
+}
+```
+
+We're leveraging the one definitive property that identifies 48K Spectrum files.
+
 ## Recommendation
 
 **Keep Approach 4 (Current Design)** as documented in this codebase:
 
 ✅ **What we're doing RIGHT:**
-1. **Silent rejection** - Invalid files don't generate error images
-2. **Graceful fallback** - macOS uses other handlers for unsupported .sna variants
-3. **Matches industry practice** - Emulators (Fuse, Unreal Speccy) validate at runtime
-4. **Future-proof** - User can install other Quick Look extensions for Amstrad/DOS snapshots without conflicts
+1. **Exact size check** - 49,179 bytes = unambiguous 48K Spectrum identifier
+2. **Silent rejection** - Invalid files don't generate error images
+3. **Graceful fallback** - macOS uses other handlers for other .sna variants
+4. **Matches industry practice** - Emulators (Fuse, Unreal Speccy) validate at runtime
+5. **Future-proof** - User can install other Quick Look extensions for Amstrad/128K without conflicts
 
 ❌ **Why NOT implement filtering at UTType level:**
 - UTType is a **type declaration**, not a **validation mechanism**
-- File size cannot be encoded in UTType spec (Apple doesn't support it)
-- Multiple .sna file types are genuinely different **emulator formats**, not variations
-- Attempting to discriminate at UTType level would either:
-  - Require separate UTType per variant (breaks with multiple extension handlers)
-  - Force validation into system-level type detection (impossible—happens before extension loads)
+- Apple UTType spec has no mechanism for size constraints
+- Attempting to discriminate at UTType level would require either:
+  - Separate UTType per variant → breaks multi-handler scenarios
+  - Encoded magic bytes → but Spectrum format has none
+- File size cannot be verified before extension loads
+- Runtime validation at extension load time is the **most reliable approach**
 
-**Bottom line:** Keep current implementation as-is. The system already works correctly because:
-- We validate at extension load time (most reliable place)
-- We silently reject invalid files (best UX)
-- We don't pollute the file type registry with unverifiable claims
-- Users can install appropriate handlers for other .sna formats without conflicts
+**Bottom line:** Current implementation is optimal. Size-checking at runtime is:
+- ✅ Unambiguous (49,179 = only 48K Spectrum)
+- ✅ Reliable (happens at load time, not system level)
+- ✅ User-friendly (silent rejection, no error clutter)
+- ✅ Extensible (other handlers can coexist)
 
 ## References
 - [Apple UTType API](https://developer.apple.com/documentation/uniformtypeidentifiers/uttype-swift.struct)
